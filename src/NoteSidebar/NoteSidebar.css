@@ -1,0 +1,39 @@
+.NoteSidebar {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-left: 10px;
+}
+
+.folderList {
+    list-style: none;
+    padding-left: 0px;
+}
+
+.folderList li {
+    border: 1px solid black;
+    width: 100px;
+    padding: 25px;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+a:link {
+    text-decoration: none;
+    color: black;
+}
+
+a li:visited {
+    background-color: lightgreen;
+    color: black;
+}
+
+a li:hover {
+    background-color: lightgrey;
+    color: black;
+}
+
+a li:active {
+    color: black
+}
+

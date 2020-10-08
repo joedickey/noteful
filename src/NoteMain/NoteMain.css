@@ -1,0 +1,11 @@
+.NoteMain__container {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px ;
+    margin-right: 10px;
+}
+
+.NoteMain__container > p:last-of-type {
+    margin-left: 40px;
+    
+}

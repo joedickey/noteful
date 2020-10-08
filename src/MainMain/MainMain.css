@@ -1,0 +1,33 @@
+.MainMain {
+    margin-right: 10px;
+   
+}
+
+.MainMain__container {
+    display: flex;
+    flex-direction: column;
+    max-width: 600px;
+}
+
+.MainMain__container button {
+    align-self: center;
+    
+}
+
+.noteList li {
+    display: flex;
+    justify-content: space-between;
+    border: 1px solid black;
+    padding: 15px;
+    margin-bottom: 10px;
+    max-width: 600px;
+}
+
+.noteList li button {
+    align-self: flex-end;
+    
+}
+
+.noteDetails a:hover{
+    color: grey;
+}
