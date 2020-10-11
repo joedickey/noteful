@@ -1,16 +1,18 @@
 import React, { Component} from 'react';
 import './NoteSidebar.css'
-import STORE from '../dummy-store'
+import NotefulContext from '../NotefulContext'
 
 class NoteSidebar extends Component {
+    static contextType = NotefulContext;
+
     handleBack = () => {
         this.props.history.goBack()
     }
     
     
     render() {
-        const folders = STORE.folders.map((folder, index) => {
-            if (this.props.folder__id === folder.id) {
+        const folders = this.context.folders.map((folder) => {
+            if (this.context.folder__id === folder.id) {
                 return (
                     
                     <h2>{folder.name}</h2>

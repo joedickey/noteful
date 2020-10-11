@@ -1,28 +1,64 @@
 import React, { Component} from 'react';
 import {Link} from 'react-router-dom'
 import './MainMain.css'
-import STORE from '../dummy-store'
 import dateFormat from 'dateformat'
+import NotefulContext from '../NotefulContext'
 
 
 class MainMain extends Component {
+    static contextType = NotefulContext
+
+    handleDeleteNote(noteId, callback) {
+        fetch(`http://localhost:9090/notes/${noteId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => {
+            if(!response.ok) {
+                throw new Error(response.status + ' ' + response.statusText)
+            }
+            return response.json()
+        })
+        .then (responseJson => {
+            callback(noteId)
+        })
+        .catch(err => console.log('Something went wrong! ' + err.message))      
+    }
     
     
     render() {
-        const notes = STORE.notes.map((note, index) => {
-            if (this.props.folder__id  === note.folderId || this.props.folder__id === undefined){
+        const notes = this.context.notes.map((note, index) => {
+            if (this.context.folder__id  === note.folderId || this.context.folder__id === ''){
                 return (
-                        <li key={index} id={note.id} folder__id={note.folderId} note__id={note.id}>
-                            <div className="noteDetails">
-                                <Link to={`../note/${note.id}/${note.folderId}`} note__id={note.id} folder__id={note.folderId}>
-                                    <h2>{note.name}</h2>
+                    <NotefulContext.Consumer>
+                        {({updateNoteId, updateFolderId, deleteNote}) => (
+                            <li key={note.id} id={note.id} folder__id={note.folderId} note__id={note.id}>
+                                <div className="noteDetails">
+                                    <Link 
+                                        to={`../note/${note.id}/${note.folderId}`} 
+                                            note__id={note.id} 
+                                            folder__id={note.folderId}
+                                            onClick={function(e) {
+                                                updateNoteId(note.id);
+                                                updateFolderId(note.folderId)}}>
+                                        <h2>{note.name}</h2>
+                                    </Link>
+                                    <p>Modified on date: {dateFormat(note.modified, 'ddd, mmm dS, yyyy')}</p>
+                                </div>
+                                <Link 
+                                    to={'/'}
+                                    onClick={(e) => updateFolderId('')}>
+                                    <button 
+                                    type='button'
+                                    onClick={(e) => this.handleDeleteNote(note.id, deleteNote)}>
+                                        Delete Note
+                                    </button>
                                 </Link>
-                                <p>Modified on date: {dateFormat(note.modified, 'ddd, mmm dS, yyyy')}</p>
-                            </div>
-                            <button type='button'>
-                                Delete Note
-                            </button>
-                        </li>
+                            </li>
+                        )}
+                    </NotefulContext.Consumer>
                 )
             }
         })
