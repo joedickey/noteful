@@ -6,13 +6,10 @@
 .MainMain__container {
     display: flex;
     flex-direction: column;
-    max-width: 600px;
+    max-width: 1000px;
+    align-items: center;
 }
 
-.MainMain__container button {
-    align-self: center;
-    
-}
 
 .noteList li {
     display: flex;
@@ -20,7 +17,7 @@
     border: 1px solid black;
     padding: 15px;
     margin-bottom: 10px;
-    max-width: 600px;
+    max-width: 1000px;
 }
 
 .noteList li button {

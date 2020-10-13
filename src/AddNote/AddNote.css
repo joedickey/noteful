@@ -1,0 +1,26 @@
+.AddNote {
+    margin: 0px 30px;
+}
+
+.form__inputs {
+    display: flex;
+    flex-direction: column;
+}
+
+.form__buttons {
+    margin-top: 15px;
+}
+
+#submit {
+    margin-left: 15px;
+}
+
+#newnote__name {
+    margin-left: 0px;
+}
+
+label {
+    margin: 5px 0px;
+}
+
+

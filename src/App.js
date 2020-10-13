@@ -1,12 +1,15 @@
 import React, { Component} from 'react';
 import {Route, Link} from 'react-router-dom'
 import './App.css';
-import NotefulContext, {updateFolderId} from './NotefulContext'
+import NotefulContext from './NotefulContext'
 import MainSidebar from './MainSidebar/MainSidebar'
 import MainMain from './MainMain/MainMain'
 import NoteSidebar from './NoteSidebar/NoteSidebar'
 import NoteMain from './NoteMain/NoteMain'
-import STORE from './dummy-store'
+import AddFolder from './AddFolder/AddFolder'
+import AddNote from './AddNote/AddNote'
+import PropTypes from 'prop-types'
+import ErrorBoundary from './ErrorBoundary/ErrorBoundary'
 
 
 class App extends Component {
@@ -16,7 +19,7 @@ class App extends Component {
     folders: [],
     notes: [],
     folder__id: '',
-    note__id: ''
+    note__id: '',
   }
 
   componentDidMount() {
@@ -67,7 +70,7 @@ class App extends Component {
         note__id: ''
       })
     }
-
+    
     deleteNote = (noteId) => {
       const newNotes = this.state.notes.filter(note =>
         note.id !== noteId
@@ -77,6 +80,41 @@ class App extends Component {
       })
     }
 
+    updateRender = (str) => {
+      console.log(str)
+      fetch('http://localhost:9090/folders')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Something went wrong')
+        }
+        return response.json()
+      })
+      .then(responseJson => {
+        this.setState({
+          folders: responseJson
+        })
+      })
+      .catch(err => console.log(err.message))
+      this.setState({
+        notes: this.state.notes,
+        folders: this.state.folders
+      })
+
+      fetch('http://localhost:9090/notes')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(response.status + ' ' + response.statusText)
+        }
+        return response.json()
+      })
+      .then(responseJson => {
+        this.setState({
+          notes: responseJson
+        })
+      })
+      .catch(err => console.log('Something went wrong: ' + err.message))
+      
+    }
 
   render() {
     const contextValue = {
@@ -86,7 +124,8 @@ class App extends Component {
       note__id: this.state.note__id,
       updateFolderId: this.updateFolderId,
       updateNoteId: this.updateNoteId,
-      deleteNote: this.deleteNote
+      deleteNote: this.deleteNote,
+      updateRender: this.updateRender
     }
 
     return (
@@ -99,36 +138,61 @@ class App extends Component {
         </header>
         <NotefulContext.Provider value={contextValue}>
           <div className='container__app'>
-            <div className='sidebar__app'>
-              <Route 
-                exact
-                path='/'
+            <ErrorBoundary>
+              <div className='sidebar__app'>
+                <Route 
+                  exact
+                  path={['/', '/addfolder', '/addnote']}
+                  component={MainSidebar}/>
+                <Route
+                path='/folder/:folder__id'
                 component={MainSidebar}/>
-              <Route
-              path='/folder/:folder__id'
-              component={MainSidebar}/>
-              <Route 
-              path='/note/:note__id/:folder__id'
-              component={NoteSidebar}/>
-            </div>
-            <div className='main__app'>
-              <Route
-                exact
-                path='/'
+                <Route 
+                path='/note/:note__id/:folder__id'
+                component={NoteSidebar}/>
+              </div>
+            </ErrorBoundary>
+            <ErrorBoundary>
+              <div className='main__app'>
+                <Route
+                  exact
+                  path='/'
+                  component={MainMain}/>
+                <Route
+                path='/folder/:folder__id'
                 component={MainMain}/>
-              <Route
-              path='/folder/:folder__id'
-              component={MainMain}/>
-              <Route 
-              path='/note/:note__id'
-              component={NoteMain}/>
-            </div>
+                <Route 
+                path='/note/:note__id'
+                component={NoteMain}/>
+                <Route 
+                  path='/addfolder'
+                  component={AddFolder}/>
+                  <Route 
+                  path='/addnote'
+                  component={AddNote}/>
+              </div>
+            </ErrorBoundary>
           </div>
         </NotefulContext.Provider>
       </div>
     );
   }
 
+}
+
+Route.propTypes = {
+  path: PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.arrayOf(PropTypes.string)]),
+  component: PropTypes.oneOfType([PropTypes.object.isRequired, PropTypes.func.isRequired])
+
+}
+
+NotefulContext.Provider.propTypes = {
+  value: PropTypes.object
+}
+
+Link.propTypes = {
+  to: PropTypes.string.isRequired,
+  onClick: PropTypes.func
 }
 
 export default App;

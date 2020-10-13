@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom'
 import './NoteMain.css'
 import NotefulContext from '../NotefulContext'
 import dateFormat from 'dateformat'
+import PropTypes from 'prop-types'
 
 
 
@@ -59,6 +60,7 @@ class NoteMain extends Component {
                     </div>
                 )
             }
+            return <></>
         })
         return (
             <div className='NoteMain'>
@@ -67,5 +69,10 @@ class NoteMain extends Component {
         )
     }
 }
+
+Link.propTypes = {
+    to: PropTypes.string.isRequired,
+    onClick: PropTypes.func
+  }
 
 export default NoteMain;

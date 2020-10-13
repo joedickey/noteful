@@ -3,6 +3,7 @@ import {Link} from 'react-router-dom'
 import './MainMain.css'
 import dateFormat from 'dateformat'
 import NotefulContext from '../NotefulContext'
+import PropTypes from 'prop-types'
 
 
 class MainMain extends Component {
@@ -29,7 +30,7 @@ class MainMain extends Component {
     
     
     render() {
-        const notes = this.context.notes.map((note, index) => {
+        const notes = this.context.notes.map((note) => {
             if (this.context.folder__id  === note.folderId || this.context.folder__id === ''){
                 return (
                     <NotefulContext.Consumer>
@@ -61,6 +62,7 @@ class MainMain extends Component {
                     </NotefulContext.Consumer>
                 )
             }
+            return <></>
         })
         return (
             <div className='MainMain'>
@@ -68,13 +70,22 @@ class MainMain extends Component {
                     <ul className='noteList'>
                         {notes}
                     </ul>
-                    <button type='button' className='addNoteBtn'>
-                        Add Note
-                    </button>
+                    <Link to={'/addnote'}>
+                        <button type='button' className='addNoteBtn'>
+                            Add Note
+                        </button>
+                    </Link>
                 </div>
             </div>
         )
     }
 }
+
+Link.propTypes = {
+    to: PropTypes.string.isRequired,
+    onClick: PropTypes.func,
+    note__id: PropTypes.string,
+    folder__id: PropTypes.string
+  }
 
 export default MainMain;

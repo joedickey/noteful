@@ -19,6 +19,7 @@ class NoteSidebar extends Component {
                    
                 )
             }
+            return <></>
         })
         return (
             <div className='NoteSidebar'>

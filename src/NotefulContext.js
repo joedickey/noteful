@@ -7,7 +7,8 @@ const NotefulContext = React.createContext({
     note__id: '',
     updateFolderId: () => {},
     updateNoteId: () => {},
-    deleteNote: () => {}
+    deleteNote: () => {},
+    updateRender: () => {},
 })
 
 export default NotefulContext;
