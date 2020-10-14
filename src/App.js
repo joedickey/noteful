@@ -80,40 +80,26 @@ class App extends Component {
       })
     }
 
-    updateRender = (str) => {
-      console.log(str)
-      fetch('http://localhost:9090/folders')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Something went wrong')
-        }
-        return response.json()
-      })
-      .then(responseJson => {
-        this.setState({
-          folders: responseJson
-        })
-      })
-      .catch(err => console.log(err.message))
+    updateFolders = (id, name) => {
+      const newFolderObject = {"id": id, "name": name}
+      this.state.folders.push(newFolderObject)
       this.setState({
-        notes: this.state.notes,
         folders: this.state.folders
       })
+    }
 
-      fetch('http://localhost:9090/notes')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(response.status + ' ' + response.statusText)
-        }
-        return response.json()
+    updateNotes = (id, name, date, folderId, content) => {
+      const newNoteObject = {
+        "id": id, 
+        "name": name, 
+        "modified": date,
+        "folderId": folderId,
+        "content": content 
+      }
+      this.state.notes.push(newNoteObject)
+      this.setState({
+        notes: this.state.notes
       })
-      .then(responseJson => {
-        this.setState({
-          notes: responseJson
-        })
-      })
-      .catch(err => console.log('Something went wrong: ' + err.message))
-      
     }
 
   render() {
@@ -125,7 +111,8 @@ class App extends Component {
       updateFolderId: this.updateFolderId,
       updateNoteId: this.updateNoteId,
       deleteNote: this.deleteNote,
-      updateRender: this.updateRender
+      updateFolders: this.updateFolders,
+      updateNotes: this.updateNotes
     }
 
     return (

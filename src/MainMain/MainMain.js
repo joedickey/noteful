@@ -33,9 +33,9 @@ class MainMain extends Component {
         const notes = this.context.notes.map((note) => {
             if (this.context.folder__id  === note.folderId || this.context.folder__id === ''){
                 return (
-                    <NotefulContext.Consumer>
+                    <NotefulContext.Consumer key={note.id}>
                         {({updateNoteId, updateFolderId, deleteNote}) => (
-                            <li key={note.id} id={note.id} folder__id={note.folderId} note__id={note.id}>
+                            <li id={note.id} folder__id={note.folderId} note__id={note.id}>
                                 <div className="noteDetails">
                                     <Link 
                                         to={`../note/${note.id}/${note.folderId}`} 

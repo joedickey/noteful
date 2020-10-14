@@ -31,23 +31,24 @@ class AddNote extends Component {
         }
     }
 
-    handleSubmit(event) {
+    handleSubmit(event, callback) {
         event.preventDefault();
         const newnote__name = event.target.newnote__name.value
         const id = uuidv4()
         const date = new Date()
         const folderId = event.target.folderselect.value
         const content = event.target.content.value
-        this.postNewFolder(newnote__name, id, date, folderId, content)
+        this.postNewFolder(newnote__name, id, date, folderId, content, callback)
         this.setState({
             name: '',
             touched: false,
         })
         Array.from(document.querySelectorAll(["input", "textarea"])).forEach(
             input => (input.value = ""))
+        this.props.history.goBack()
     }
 
-    postNewFolder(name, id, date, folderId, content) {
+    postNewFolder(name, id, date, folderId, content, callback) {
         fetch(`http://localhost:9090/notes`, {
             method: 'POST',
             headers: {
@@ -66,6 +67,7 @@ class AddNote extends Component {
                 throw new Error(response.status + ' ' + response.statusText)
             }
             console.log('New note added');
+            callback(id, name, date, folderId, content)
         })
         .catch(err => console.log('Something went wrong! ' + err.message))
     }
@@ -83,34 +85,34 @@ class AddNote extends Component {
             )
         })
         return(
-            <form className='AddNote' onSubmit={e => this.handleSubmit(e)}>
-                <h2>Create New Note</h2>
-                <div className='form__inputs'>
-                    <label htmlFor='newnote__name'>Enter note name:</label>
-                    <input type='text' name='newnote__name' id='newnote__name' onChange={e => this.changeNameState(e)} required/>
-                    <ValidateNameEntry message={this.validateNameEntry()}/>
-                    <label htmlFor='folderselect'>Select folder:</label>
-                    <select name='folderselect' id='folderselect'>
-                        {folderOptions}
-                    </select>
-                    <label htmlFor='content'>Content:</label>
-                    <textarea name='content' id='content' rows='6'></textarea>
-                </div>
-                <div className='form__buttons'>
-                    <Link to={'/'}>
-                        <button type='reset' id='cancel'>
-                            Cancel
-                        </button>
-                    </Link>
-                    <NotefulContext.Consumer>
-                        {({updateRender}) => (
-                            <button type='submit' id='submit' onClick={() => this.handleContextUpdate(updateRender)}>
+            <NotefulContext.Consumer>
+                {({updateNotes}) => (
+                    <form className='AddNote' onSubmit={e => this.handleSubmit(e, updateNotes)}>
+                        <h2>Create New Note</h2>
+                        <div className='form__inputs'>
+                            <label htmlFor='newnote__name'>Enter note name:</label>
+                            <input type='text' name='newnote__name' id='newnote__name' onChange={e => this.changeNameState(e)} required/>
+                            <ValidateNameEntry message={this.validateNameEntry()}/>
+                            <label htmlFor='folderselect'>Select folder:</label>
+                            <select name='folderselect' id='folderselect'>
+                                {folderOptions}
+                            </select>
+                            <label htmlFor='content'>Content:</label>
+                            <textarea name='content' id='content' rows='6'></textarea>
+                        </div>
+                        <div className='form__buttons'>
+                            <Link to={'/'}>
+                                <button type='reset' id='cancel'>
+                                    Cancel
+                                </button>
+                            </Link>
+                            <button type='submit' id='submit'>
                                 Submit
                             </button>
-                        )}
-                    </NotefulContext.Consumer>
-                </div>
-            </form>
+                        </div>
+                    </form>
+                 )}
+            </NotefulContext.Consumer>
         )
     }
 }

@@ -11,7 +11,7 @@ class MainSidebar extends Component {
     render() {
         const folders = this.context.folders.map((folder, index) => {
             return (
-                <NotefulContext.Consumer>
+                <NotefulContext.Consumer key={folder.id}>
                     {({updateFolderId}) => (
                         <Link 
                             to={`/folder/${folder.id}`} 

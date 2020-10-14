@@ -30,20 +30,21 @@ class AddFolder extends Component {
         }
     }
 
-    handleSubmit(event) {
+    handleSubmit(event, callback) {
         event.preventDefault();
         const newfolder__name = event.target.newfolder__name.value
         const id = uuidv4()
-        this.postNewFolder(newfolder__name, id)
+        this.postNewFolder(newfolder__name, id, callback)
         this.setState({
             name: '',
             touched: false,
         })
         Array.from(document.querySelectorAll("input")).forEach(
             input => (input.value = ""))
+        this.props.history.push('/')
     }
 
-    postNewFolder(name, id) {
+    postNewFolder(name, id, callback) {
         fetch(`http://localhost:9090/folders`, {
             method: 'POST',
             headers: {
@@ -58,42 +59,37 @@ class AddFolder extends Component {
             if(!response.ok) {
                 throw new Error(response.status + ' ' + response.statusText)
             }
-          
             console.log('New folder added');
+            callback(id, name)
         })
         .catch(err => console.log('Something went wrong! ' + err.message))
     }
 
-    handleContextUpdate(callback) {
-        setTimeout(function(){
-            callback('re-rendered');      
-        }, 200)   
-    }
 
     render() {
         return(
-            <form className='AddFolder' onSubmit={e => this.handleSubmit(e)}>
-                <h2>Create New Folder</h2>
-                <div className='form__inputs'>
-                    <label htmlFor='newfolder__name'>Enter folder name:</label>
-                    <input type='text' name='newfolder__name' id='newfolder__name' onChange={e => this.changeNameState(e)} required/>
-                    <ValidateNameEntry message={this.validateNameEntry()}/>
-                </div>
-                <div className='form__buttons'>
-                    <Link to={'/'}>
-                        <button type='reset' id='cancel'>
-                            Cancel
-                        </button>
-                    </Link>
-                    <NotefulContext.Consumer>
-                        {({updateRender}) => (
-                            <button type='submit' id='submit' onClick={() => this.handleContextUpdate(updateRender)}>
-                                Submit
+            <NotefulContext.Consumer>
+                {({updateFolders}) => (
+                    <form className='AddFolder' onSubmit={e => this.handleSubmit(e, updateFolders)}>
+                        <h2>Create New Folder</h2>
+                        <div className='form__inputs'>
+                            <label htmlFor='newfolder__name'>Enter folder name:</label>
+                            <input type='text' name='newfolder__name' id='newfolder__name' onChange={e => this.changeNameState(e)} required/>
+                            <ValidateNameEntry message={this.validateNameEntry()}/>
+                        </div>
+                        <div className='form__buttons'>
+                            <Link to={'/'}>
+                                <button type='reset' id='cancel'>
+                                    Cancel
+                                </button>
+                            </Link>
+                            <button type='submit' id='submit'>
+                                    Submit
                             </button>
-                        )}
-                    </NotefulContext.Consumer>
-                </div>
-            </form>
+                        </div>
+                    </form>
+               )}
+            </NotefulContext.Consumer>
         )
     }
 }
