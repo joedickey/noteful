@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import {Link} from 'react-router-dom'
 import './NoteMain.css'
 import NotefulContext from '../NotefulContext'
@@ -34,7 +34,7 @@ class NoteMain extends Component {
         const notes = this.context.notes.map((note, index) => {
             if (this.context.note__id  === note.id){
                 return (
-                    <div className='NoteMain__container'>
+                    <div className='NoteMain__container' key={note.id}>
                         <ul className='noteList'>
                             <NotefulContext.Consumer>
                                 {({deleteNote, updateFolderId}) => (
@@ -60,7 +60,7 @@ class NoteMain extends Component {
                     </div>
                 )
             }
-            return <></>
+            return <Fragment key={note.id}></Fragment>
         })
         return (
             <div className='NoteMain'>

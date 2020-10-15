@@ -1,4 +1,4 @@
-import React, { Component} from 'react';
+import React, { Component, Fragment} from 'react';
 import './NoteSidebar.css'
 import NotefulContext from '../NotefulContext'
 
@@ -14,12 +14,12 @@ class NoteSidebar extends Component {
         const folders = this.context.folders.map((folder) => {
             if (this.context.folder__id === folder.id) {
                 return (
-                    <>
+                    <div key={folder.id}>  
                         <h2>{folder.name}</h2>
-                    </>
+                    </div>
                 )
             }
-            return <></>
+            return <Fragment key={folder.id}></Fragment>
         })
         return (
             <div className='NoteSidebar'>

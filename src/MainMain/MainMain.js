@@ -1,4 +1,4 @@
-import React, { Component} from 'react';
+import React, { Component, Fragment} from 'react';
 import {Link} from 'react-router-dom'
 import './MainMain.css'
 import dateFormat from 'dateformat'
@@ -35,10 +35,11 @@ class MainMain extends Component {
                 return (
                     <NotefulContext.Consumer key={note.id}>
                         {({updateNoteId, updateFolderId, deleteNote}) => (
-                            <li id={note.id} folder__id={note.folderId} note__id={note.id}>
+                            <li key={note.id} id={note.id} folder__id={note.folderId} note__id={note.id}>
                                 <div className="noteDetails">
                                     <Link 
                                         to={`../note/${note.id}/${note.folderId}`} 
+                                            key={note.id}
                                             note__id={note.id} 
                                             folder__id={note.folderId}
                                             onClick={function(e) {
@@ -62,7 +63,7 @@ class MainMain extends Component {
                     </NotefulContext.Consumer>
                 )
             }
-            return <></>
+            return <Fragment key={note.id}></Fragment>
         })
         return (
             <div className='MainMain'>
