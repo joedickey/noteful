@@ -74,7 +74,7 @@ class AddFolder extends Component {
                         <h2>Create New Folder</h2>
                         <div className='form__inputs'>
                             <label htmlFor='newfolder__name'>Enter folder name:</label>
-                            <input type='text' name='newfolder__name' id='newfolder__name' onChange={e => this.changeNameState(e)} required/>
+                            <input type='text' name='newfolder__name' id='newfolder__name' aria-required="true" aria-label="New Folder Name" onChange={e => this.changeNameState(e)} required/>
                             <ValidateNameEntry message={this.validateNameEntry()}/>
                         </div>
                         <div className='form__buttons'>

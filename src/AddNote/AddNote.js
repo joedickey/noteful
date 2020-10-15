@@ -91,14 +91,14 @@ class AddNote extends Component {
                         <h2>Create New Note</h2>
                         <div className='form__inputs'>
                             <label htmlFor='newnote__name'>Enter note name:</label>
-                            <input type='text' name='newnote__name' id='newnote__name' onChange={e => this.changeNameState(e)} required/>
+                            <input type='text' name='newnote__name' id='newnote__name' aria-required="true" aria-label="New Note Name" onChange={e => this.changeNameState(e)} required/>
                             <ValidateNameEntry message={this.validateNameEntry()}/>
                             <label htmlFor='folderselect'>Select folder:</label>
-                            <select name='folderselect' id='folderselect'>
+                            <select name='folderselect' id='folderselect' aria-required="true" aria-label="Select Folder">
                                 {folderOptions}
                             </select>
                             <label htmlFor='content'>Content:</label>
-                            <textarea name='content' id='content' rows='6'></textarea>
+                            <textarea name='content' id='content' rows='6' aria-required="true" aria-label="New Note Content"></textarea>
                         </div>
                         <div className='form__buttons'>
                             <Link to={'/'}>
