@@ -14,9 +14,9 @@ class NoteSidebar extends Component {
         const folders = this.context.folders.map((folder) => {
             if (this.context.folder__id === folder.id) {
                 return (
-                    
-                    <h2>{folder.name}</h2>
-                   
+                    <>
+                        <h2>{folder.name}</h2>
+                    </>
                 )
             }
             return <></>
