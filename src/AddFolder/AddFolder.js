@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
 import './AddFolder.css'
 import {Link} from 'react-router-dom'
-import { v4 as uuidv4 } from 'uuid'
 import PropTypes from 'prop-types'
 import ValidateNameEntry from '../ValidateNameEntry/ValidateNameEntry'
 import NotefulContext from '../NotefulContext'
+import API_ENDPOINT from '../config.js'
 
 
 
@@ -33,8 +33,7 @@ class AddFolder extends Component {
     handleSubmit(event, callback) {
         event.preventDefault();
         const newfolder__name = event.target.newfolder__name.value
-        const id = uuidv4()
-        this.postNewFolder(newfolder__name, id, callback)
+        this.postNewFolder(newfolder__name, callback)
         this.setState({
             name: '',
             touched: false,
@@ -44,14 +43,13 @@ class AddFolder extends Component {
         this.props.history.push('/')
     }
 
-    postNewFolder(name, id, callback) {
-        fetch(`http://localhost:9090/folders`, {
+    postNewFolder(name, callback) {
+        fetch(`${API_ENDPOINT}api/folders`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                'id': id,
                 'name': name
             })
         })
@@ -59,9 +57,14 @@ class AddFolder extends Component {
             if(!response.ok) {
                 throw new Error(response.status + ' ' + response.statusText)
             }
-            console.log('New folder added');
-            callback(id, name)
+
+            return response.json()
         })
+        .then(function(data) {
+            console.log('New folder added')
+            const id = data.id
+            callback(name, id)
+        } )
         .catch(err => console.log('Something went wrong! ' + err.message))
     }
 

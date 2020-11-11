@@ -10,6 +10,7 @@ import AddFolder from './AddFolder/AddFolder'
 import AddNote from './AddNote/AddNote'
 import PropTypes from 'prop-types'
 import ErrorBoundary from './ErrorBoundary/ErrorBoundary'
+import API_ENDPOINT from './config.js'
 
 
 class App extends Component {
@@ -19,11 +20,11 @@ class App extends Component {
     folders: [],
     notes: [],
     folder__id: '',
-    note__id: '',
+    note__id: ''
   }
 
   componentDidMount() {
-    fetch('http://localhost:9090/folders')
+    fetch(`${API_ENDPOINT}api/folders`)
       .then(response => {
         if (!response.ok) {
           throw new Error('Something went wrong')
@@ -37,7 +38,7 @@ class App extends Component {
       })
       .catch(err => console.log(err.message))
 
-      fetch('http://localhost:9090/notes')
+      fetch(`${API_ENDPOINT}api/notes`)
       .then(response => {
         if (!response.ok) {
           throw new Error(response.status + ' ' + response.statusText)
@@ -76,11 +77,11 @@ class App extends Component {
         note.id !== noteId
       )
       this.setState({
-        notes: newNotes
+        notes: newNotes,
       })
     }
 
-    updateFolders = (id, name) => {
+    updateFolders = (name, id) => {
       const newFolderObject = {"id": id, "name": name}
       this.state.folders.push(newFolderObject)
       this.setState({
@@ -88,12 +89,11 @@ class App extends Component {
       })
     }
 
-    updateNotes = (id, name, date, folderId, content) => {
+    updateNotes = (name, folderId, content, id) => {
       const newNoteObject = {
-        "id": id, 
+        "id": id,
         "name": name, 
-        "modified": date,
-        "folderId": folderId,
+        "folderid": folderId,
         "content": content 
       }
       this.state.notes.push(newNoteObject)

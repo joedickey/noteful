@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
 import './AddNote.css'
 import {Link} from 'react-router-dom'
-import { v4 as uuidv4 } from 'uuid'
 import NotefulContext from '../NotefulContext'
 import ValidateNameEntry from '../ValidateNameEntry/ValidateNameEntry'
 import PropTypes from 'prop-types'
+import API_ENDPOINT from '../config.js'
 
 
 
@@ -34,11 +34,9 @@ class AddNote extends Component {
     handleSubmit(event, callback) {
         event.preventDefault();
         const newnote__name = event.target.newnote__name.value
-        const id = uuidv4()
-        const date = new Date()
-        const folderId = event.target.folderselect.value
+        const folderid = event.target.folderselect.value
         const content = event.target.content.value
-        this.postNewFolder(newnote__name, id, date, folderId, content, callback)
+        this.postNewNote(newnote__name, folderid, content, callback)
         this.setState({
             name: '',
             touched: false,
@@ -48,17 +46,15 @@ class AddNote extends Component {
         this.props.history.goBack()
     }
 
-    postNewFolder(name, id, date, folderId, content, callback) {
-        fetch(`http://localhost:9090/notes`, {
+    postNewNote(name, folderid, content, callback) {
+        fetch(`${API_ENDPOINT}api/notes`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                'id': id,
                 'name': name,
-                'modified': date,
-                'folderId': folderId,
+                'folderid': folderid,
                 'content': content
             })
         })
@@ -66,8 +62,12 @@ class AddNote extends Component {
             if(!response.ok) {
                 throw new Error(response.status + ' ' + response.statusText)
             }
-            console.log('New note added');
-            callback(id, name, date, folderId, content)
+            return response.json()
+        })
+        .then(function(data) {
+            console.log('New note added')
+            const id = data.id
+            callback(name, folderid, content, id)
         })
         .catch(err => console.log('Something went wrong! ' + err.message))
     }

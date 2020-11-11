@@ -4,6 +4,7 @@ import './NoteMain.css'
 import NotefulContext from '../NotefulContext'
 import dateFormat from 'dateformat'
 import PropTypes from 'prop-types'
+import API_ENDPOINT from '../config.js'
 
 
 
@@ -11,7 +12,7 @@ class NoteMain extends Component {
     static contextType = NotefulContext
 
     handleDeleteNote(noteId, callback) {
-        fetch(`http://localhost:9090/notes/${noteId}`, {
+        fetch(`${API_ENDPOINT}api/notes/${noteId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'
@@ -21,11 +22,10 @@ class NoteMain extends Component {
             if(!response.ok) {
                 throw new Error(response.status + ' ' + response.statusText)
             }
-            return response.json()
         })
-        .then (responseJson => {
+        .then (
             callback(noteId)
-        })
+        )
         .catch(err => console.log('Something went wrong! ' + err.message))      
     }
     
@@ -38,10 +38,10 @@ class NoteMain extends Component {
                         <ul className='noteList'>
                             <NotefulContext.Consumer>
                                 {({deleteNote, updateFolderId}) => (
-                                <li key={note.id} id={note.id} folder__id={note.folderId} note__id={note.id}>
+                                <li key={note.id} id={note.id} folder__id={note.folderid} note__id={note.id}>
                                     <div className="noteDetails">
                                         <h2>{note.name}</h2>
-                                        <p>Modified on date: {dateFormat(note.modified, 'ddd, mmm dS, yyyy')}</p>
+                                        <p>Modified on date: {dateFormat(note.modified)}</p>
                                     </div>
                                     <Link 
                                         to={'/'}
